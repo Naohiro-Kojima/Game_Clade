@@ -175,8 +175,7 @@
               <span>ボタンを押して役割を確認</span>
             </div>
             <div class="card-face card-back">
-              <span class="role-badge" id="ww-role-badge"></span>
-              <span class="ww-topic-label" style="margin-top:8px;">あなたのお題</span>
+              <span class="ww-topic-label">あなたのお題</span>
               <span class="ww-topic-value" id="ww-topic"></span>
             </div>
           </div>
@@ -186,8 +185,8 @@
           <button class="btn btn-primary" id="btn-check-wordwolf">
             役割を確認する
           </button>
-          <button class="btn btn-secondary" id="btn-start-discussion" hidden>
-            議論を始める →
+          <button class="btn btn-secondary" id="btn-start-discussion" disabled>
+            議論を開始する →
           </button>
         </div>
 
@@ -195,6 +194,11 @@
 
       <!-- ─── フェーズ2: 議論・投票 ─── -->
       <div id="ww-playing" hidden>
+
+        <div class="ww-discussion-header">
+          <span class="ww-discussion-dot"></span>
+          議論中
+        </div>
 
         <div class="ww-vote-area">
           <p class="ww-vote-instruction">怪しいと思うプレイヤーに投票してください</p>

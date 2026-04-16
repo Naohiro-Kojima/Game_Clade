@@ -319,9 +319,9 @@ function resetTabState(tab) {
     if (playingEl) playingEl.hidden = true;
     if (resultEl)  resultEl.hidden  = true;
 
-    // 「議論を始める」ボタンを隠す
+    // 「議論を開始する」ボタンを無効化（役割未確認状態へ戻す）
     const btnStart = document.getElementById('btn-start-discussion');
-    if (btnStart) btnStart.hidden = true;
+    if (btnStart) btnStart.disabled = true;
 
     // 「役割を確認する」ボタンを有効化
     const btnCheck = document.getElementById('btn-check-wordwolf');
@@ -333,10 +333,8 @@ function resetTabState(tab) {
     const voteStatus = document.getElementById('ww-vote-status');
     if (voteStatus) voteStatus.textContent = '';
 
-    // カードバッジをクリア
-    const badgeEl = document.getElementById('ww-role-badge');
+    // カードのお題をクリア
     const topicEl = document.getElementById('ww-topic');
-    if (badgeEl) { badgeEl.textContent = ''; badgeEl.className = 'role-badge'; }
     if (topicEl) topicEl.textContent = '';
 
     setStatus('wordwolf-status', '');
@@ -581,14 +579,9 @@ function initWordWolfGame() {
     modal.show(
       '周りのプレイヤーから画面を隠してから\n「確認・表示する」を押してください。',
       () => {
-        // カードに内容をセットしてフリップ
+        // カードにお題をセットしてフリップ（役職バッジは表示しない）
         const doFlip = () => {
-          const badgeEl = document.getElementById('ww-role-badge');
           const topicEl = document.getElementById('ww-topic');
-          if (badgeEl) {
-            badgeEl.textContent = isWolf ? 'ウルフ' : '市民';
-            badgeEl.className   = 'role-badge ' + (isWolf ? 'is-wolf' : 'is-citizen');
-          }
           if (topicEl) topicEl.textContent = myTopic;
         };
 
@@ -600,10 +593,10 @@ function initWordWolfGame() {
         }
         state.wordwolf.flipped = true;
 
-        // 「議論を始める」ボタンを出現させる
-        if (btnStartDiscussion) btnStartDiscussion.hidden = false;
+        // 「議論を開始する」を有効化、「役割を確認する」を無効化
+        if (btnStartDiscussion) btnStartDiscussion.disabled = false;
         btnCheck.disabled = true;
-        setStatus('wordwolf-status', '確認できたら「議論を始める」を押してください。');
+        setStatus('wordwolf-status', 'お題を確認しました。全員が確認したら「議論を開始する」を押してください。');
       }
     );
   });
