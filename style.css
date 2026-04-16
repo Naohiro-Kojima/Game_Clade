@@ -206,10 +206,11 @@ header {
 }
 
 /* 個別NGワードバッジ */
-.ng-badge {
+.ng-badge,
+#english-ngwords .ng-badge {
   font-size: 0.82rem;
-  font-weight: 800;
-  color: #e74c3c;
+  font-weight: 800 !important;
+  color: #e74c3c !important;
   background: var(--danger-light);
   border: 1.5px solid #fca5a5;
   padding: 4px 12px;

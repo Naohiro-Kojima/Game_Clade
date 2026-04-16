@@ -407,6 +407,8 @@ function initEnglishGame() {
       picked.ngwords.split(',').forEach(word => {
         const badge = document.createElement('span');
         badge.className = 'ng-badge';
+        badge.style.color = '#e74c3c';
+        badge.style.fontWeight = '800';
         badge.textContent = word.trim();
         container.appendChild(badge);
       });
