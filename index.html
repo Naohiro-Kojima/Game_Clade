@@ -1,35 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>交流会ゲーム</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <!-- タブナビゲーション -->
   <header>
     <nav class="tab-nav" role="tablist" aria-label="ゲーム選択">
-      <button class="tab-btn active"
-              role="tab"
-              aria-selected="true"
-              aria-controls="panel-english"
-              data-tab="english">
+      <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-english" data-tab="english">
         英語限定説明
       </button>
-      <button class="tab-btn"
-              role="tab"
-              aria-selected="false"
-              aria-controls="panel-turtle"
-              data-tab="turtle">
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-turtle" data-tab="turtle">
         ウミガメのスープ
       </button>
-      <button class="tab-btn"
-              role="tab"
-              aria-selected="false"
-              aria-controls="panel-wordwolf"
-              data-tab="wordwolf">
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-wordwolf" data-tab="wordwolf">
         ワードウルフ
       </button>
     </nav>
@@ -42,14 +32,11 @@
     <div id="data-source-badge-container"></div>
 
     <!-- ===== ゲームA: 英語限定説明 ===== -->
-    <section id="panel-english"
-             class="game-panel active"
-             role="tabpanel"
-             aria-labelledby="tab-english">
+    <section id="panel-english" class="game-panel active" role="tabpanel" aria-labelledby="tab-english">
 
       <h2>英語限定説明ゲーム</h2>
       <p class="game-description">
-        NGワードを使わずに、英語でお題を説明しよう！
+        １分以内で、NGワードを使わずに、英語でお題を説明しよう！
       </p>
 
       <!-- カードフリップエリア -->
@@ -75,11 +62,7 @@
     </section>
 
     <!-- ===== ゲームB: ウミガメのスープ ===== -->
-    <section id="panel-turtle"
-             class="game-panel"
-             role="tabpanel"
-             aria-labelledby="tab-turtle"
-             hidden>
+    <section id="panel-turtle" class="game-panel" role="tabpanel" aria-labelledby="tab-turtle" hidden>
 
       <h2>ウミガメのスープ</h2>
       <p class="game-description">
@@ -87,17 +70,12 @@
       </p>
 
       <!-- 問題文エリア（常時表示） -->
-      <div class="question-display is-empty"
-           id="turtle-question-display"
-           aria-live="polite">
+      <div class="question-display is-empty" id="turtle-question-display" aria-live="polite">
         「問題を引く」を押すと、ここに問題文が表示されます。
       </div>
 
       <!-- 真相フェードイン展開エリア（初期非表示） -->
-      <div class="turtle-answer-wrapper"
-           id="turtle-answer-wrapper"
-           aria-live="polite"
-           aria-hidden="true">
+      <div class="turtle-answer-wrapper" id="turtle-answer-wrapper" aria-live="polite" aria-hidden="true">
         <div class="turtle-answer-inner">
           <div class="turtle-answer-inner-content">
             <span class="answer-label">真相</span>
@@ -118,11 +96,7 @@
     </section>
 
     <!-- ===== ゲームC: ワードウルフ ===== -->
-    <section id="panel-wordwolf"
-             class="game-panel"
-             role="tabpanel"
-             aria-labelledby="tab-wordwolf"
-             hidden>
+    <section id="panel-wordwolf" class="game-panel" role="tabpanel" aria-labelledby="tab-wordwolf" hidden>
 
       <h2>ワードウルフ</h2>
       <p class="game-description">
@@ -135,9 +109,7 @@
         <div class="wordwolf-form">
           <div class="form-group">
             <label for="ww-keyword">合言葉（全員共通）</label>
-            <input type="text" id="ww-keyword"
-                   placeholder="例: こんにゃく"
-                   autocomplete="off" spellcheck="false">
+            <input type="text" id="ww-keyword" placeholder="例: こんにゃく" autocomplete="off" spellcheck="false">
           </div>
           <div class="form-group">
             <label for="ww-round">回戦数</label>
@@ -184,8 +156,7 @@
 
         <div class="ww-vote-area">
           <p class="ww-vote-instruction">怪しいと思うプレイヤーに投票してください</p>
-          <div class="ww-vote-buttons" id="ww-vote-buttons"
-               role="group" aria-label="投票先選択"></div>
+          <div class="ww-vote-buttons" id="ww-vote-buttons" role="group" aria-label="投票先選択"></div>
           <p class="ww-vote-status" id="ww-vote-status" role="status" aria-live="polite"></p>
         </div>
 
@@ -213,10 +184,8 @@
             <p class="ww-reversal-headline">あなたはウルフでした！</p>
             <p class="ww-reversal-sub">市民のお題を当てれば逆転勝利です</p>
             <div class="ww-reversal-form">
-              <input type="text" id="ww-reversal-input"
-                     class="ww-reversal-input"
-                     placeholder="市民のお題は？"
-                     autocomplete="off">
+              <input type="text" id="ww-reversal-input" class="ww-reversal-input" placeholder="市民のお題は？"
+                autocomplete="off">
               <button class="btn btn-danger" id="btn-submit-reversal">回答する</button>
             </div>
           </div>
@@ -264,12 +233,8 @@
   </main>
 
   <!-- 確認モーダル（共通） -->
-  <div class="modal-overlay"
-       id="modal-overlay"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="modal-message"
-       aria-hidden="true">
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-message"
+    aria-hidden="true">
     <div class="modal-box">
       <p class="modal-message" id="modal-message"></p>
       <div class="modal-actions">
@@ -281,4 +246,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>
