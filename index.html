@@ -14,7 +14,7 @@
   <header>
     <nav class="tab-nav" role="tablist" aria-label="ゲーム選択">
       <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-english" data-tab="english">
-        英語限定説明
+        エイゴダーケ
       </button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-turtle" data-tab="turtle">
         ウミガメのスープ
@@ -31,12 +31,12 @@
     <!-- データソースバッジ（JSが挿入） -->
     <div id="data-source-badge-container"></div>
 
-    <!-- ===== ゲームA: 英語限定説明 ===== -->
+    <!-- ===== ゲームA: エイゴダーケ ===== -->
     <section id="panel-english" class="game-panel active" role="tabpanel" aria-labelledby="tab-english">
 
-      <h2>英語限定説明ゲーム</h2>
+      <h2>エイゴダーケ</h2>
       <p class="game-description">
-        １分以内で、NGワードを使わずに、英語でお題を説明しよう！
+        NGワードを使わずに、1分間でこのお題を英語で説明しよう！
       </p>
 
       <!-- カードフリップエリア -->
@@ -49,8 +49,8 @@
           <div class="card-face card-back">
             <span class="topic-label">お題</span>
             <span class="topic-value" id="english-topic"></span>
-            <span class="ngwords-label" style="margin-top:8px;">NGワード</span>
-            <span class="ngwords-value" id="english-ngwords"></span>
+            <span class="ngwords-label" style="margin-top:12px;">NGワード</span>
+            <div class="ngwords-container" id="english-ngwords"></div>
           </div>
         </div>
       </div>
@@ -142,6 +142,16 @@
         <div class="btn-group">
           <button class="btn btn-primary" id="btn-check-wordwolf">役割を確認する</button>
           <button class="btn btn-secondary" id="btn-start-vote" disabled>投票する →</button>
+        </div>
+
+        <!-- 準備完了セクション（役割確認後に出現） -->
+        <div id="ww-ready-section" hidden>
+          <button class="btn btn-primary ww-ready-btn" id="btn-ww-ready">
+            確認しました（準備完了）
+          </button>
+          <p class="ww-waiting-message" id="ww-waiting-msg" hidden>
+            全員が確認し終わるまで待機してください...
+          </p>
         </div>
 
       </div><!-- /#ww-setup -->

@@ -178,7 +178,7 @@ header {
   gap: 14px;
 }
 
-/* ---------- 英語ゲーム カード裏面 ---------- */
+/* ---------- エイゴダーケ カード裏面 ---------- */
 .topic-label,
 .ngwords-label {
   font-size: 0.75rem;
@@ -196,15 +196,26 @@ header {
   line-height: 1.2;
 }
 
-.ngwords-value {
-  font-size: 0.9rem;
+/* NGワードをバッジとして並べるコンテナ */
+.ngwords-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* 個別NGワードバッジ */
+.ng-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
   color: var(--danger);
-  font-weight: 600;
   background: var(--danger-light);
-  padding: 6px 14px;
+  border: 1.5px solid #fca5a5;
+  padding: 4px 12px;
   border-radius: 99px;
+  white-space: nowrap;
   line-height: 1.4;
-  text-align: center;
 }
 
 /* ---------- ウミガメのスープ ---------- */
@@ -365,6 +376,44 @@ header {
   color: var(--text-primary);
   letter-spacing: -0.02em;
   line-height: 1.2;
+}
+
+/* ---------- ワードウルフ: 準備完了UI ---------- */
+#ww-ready-section {
+  margin-top: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+.ww-ready-btn {
+  width: 100%;
+  padding: 18px 28px;
+  font-size: 1.1rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.25);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.ww-ready-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.35);
+}
+
+.ww-ready-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ww-waiting-message {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  animation: pulse 1.8s ease-in-out infinite;
 }
 
 /* ---------- ワードウルフ: 投票フェーズ ---------- */

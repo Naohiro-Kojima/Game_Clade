@@ -272,7 +272,7 @@ function resetTabState(tab) {
     const topicEl = document.getElementById('english-topic');
     const ngEl = document.getElementById('english-ngwords');
     if (topicEl) topicEl.textContent = '';
-    if (ngEl) ngEl.textContent = '';
+    if (ngEl)    ngEl.innerHTML      = '';
     setStatus('english-status', '');
   }
 
@@ -325,6 +325,14 @@ function resetTabState(tab) {
     if (btnCheck) btnCheck.disabled = false;
     if (btnVote)  btnVote.disabled  = true;
 
+    // 準備完了セクションをリセット
+    const readySection = document.getElementById('ww-ready-section');
+    const readyBtn     = document.getElementById('btn-ww-ready');
+    const waitingMsg   = document.getElementById('ww-waiting-msg');
+    if (readySection) readySection.hidden = true;
+    if (readyBtn)     readyBtn.hidden     = false;
+    if (waitingMsg)   waitingMsg.hidden   = true;
+
     // 入力・表示をクリア
     const topicEl     = document.getElementById('ww-topic');
     const voteButtons = document.getElementById('ww-vote-buttons');
@@ -375,7 +383,7 @@ function initTabs() {
 }
 
 // ============================================================
-// ゲームA: 英語限定説明
+// ゲームA: エイゴダーケ
 // ============================================================
 
 function initEnglishGame() {
@@ -393,8 +401,15 @@ function initEnglishGame() {
 
     const doFlip = () => {
       document.getElementById('english-topic').textContent = picked.topic;
-      const ng = picked.ngwords.split(',').map(w => w.trim()).join(' ／ ');
-      document.getElementById('english-ngwords').textContent = ng;
+      // NGワードを個別バッジとして描画
+      const container = document.getElementById('english-ngwords');
+      container.innerHTML = '';
+      picked.ngwords.split(',').forEach(word => {
+        const badge = document.createElement('span');
+        badge.className = 'ng-badge';
+        badge.textContent = word.trim();
+        container.appendChild(badge);
+      });
     };
 
     if (state.english.flipped) {
@@ -619,12 +634,25 @@ function initWordWolfGame() {
           flipCard('wordwolf-card');
         }
         state.wordwolf.flipped = true;
-        if (btnVote) btnVote.disabled = false;
         btnCheck.disabled = true;
-        setStatus('wordwolf-status', 'お題を確認しました。全員が確認したら「投票する」を押してください。');
+        // 「確認しました（準備完了）」ボタンを出現させる（投票はロック）
+        const readySection = document.getElementById('ww-ready-section');
+        if (readySection) readySection.hidden = false;
+        setStatus('wordwolf-status', '');
       }
     );
   });
+
+  // ── 確認しました（準備完了） ────────────────────────────────
+  const btnReady = document.getElementById('btn-ww-ready');
+  if (btnReady) {
+    btnReady.addEventListener('click', () => {
+      btnReady.hidden = true;
+      const waitingMsg = document.getElementById('ww-waiting-msg');
+      if (waitingMsg) waitingMsg.hidden = false;
+      if (btnVote) btnVote.disabled = false;
+    });
+  }
 
   // ── 投票する ────────────────────────────────────────────────
   if (btnVote) {
