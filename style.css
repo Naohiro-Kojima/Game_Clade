@@ -229,36 +229,33 @@ header {
 }
 
 /*
- * 真相フェードイン展開アニメーション
- * CSS Grid の grid-template-rows: 0fr → 1fr トリックを使用。
- * コンテンツの高さに関わらず、JS での高さ計算不要でスムーズに展開する。
+ * 真相フェードイン＋スライドアニメーション
+ * display:none で確実に非表示。is-revealed クラス付与時に
+ * CSS アニメーションでふわっとスライドしながら現れる。
  */
 .turtle-answer-wrapper {
-  display: grid;
-  grid-template-rows: 0fr;  /* 折り畳み状態（高さ0） */
-  opacity: 0;
-  margin-top: 0;
-  transition:
-    grid-template-rows 0.45s ease,
-    opacity            0.4s  ease,
-    margin-top         0.4s  ease;
-}
-
-.turtle-answer-wrapper.is-revealed {
-  grid-template-rows: 1fr;  /* 展開状態（コンテンツ高さに追従） */
-  opacity: 1;
+  display: none;        /* 初期状態: 完全に非表示 */
   margin-top: 20px;
 }
 
-/* overflow: hidden が grid-template-rows アニメーションの必須要件 */
-.turtle-answer-inner {
-  overflow: hidden;
-  transform: translateY(-10px);
-  transition: transform 0.45s ease;
+.turtle-answer-wrapper.is-revealed {
+  display: block;
+  animation: turtleReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.turtle-answer-wrapper.is-revealed .turtle-answer-inner {
-  transform: translateY(0);
+@keyframes turtleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.turtle-answer-inner {
+  /* アニメーション用ラッパー（構造維持のため残す） */
 }
 
 .turtle-answer-inner-content {
