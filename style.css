@@ -367,6 +367,187 @@ header {
   line-height: 1.2;
 }
 
+/* ---------- ワードウルフ: 投票フェーズ ---------- */
+#ww-playing,
+#ww-result {
+  animation: fadeIn 0.3s ease;
+}
+
+.ww-vote-area {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 2rem 2rem 1.75rem;
+  margin-bottom: 20px;
+}
+
+.ww-vote-instruction {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+/* 投票ボタン群（数字ボタンをタイル状に並べる） */
+.ww-vote-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ww-vote-btn {
+  min-width: 56px;
+  padding: 12px 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  font-family: var(--font);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+  user-select: none;
+}
+
+.ww-vote-btn:hover:not(:disabled) {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ww-vote-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.ww-vote-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* 自分が選んだ投票先 */
+.ww-vote-btn.is-voted {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  opacity: 1;
+}
+
+/* 自分の番号（投票不可） */
+.ww-vote-btn.is-self {
+  background: var(--bg);
+  border-style: dashed;
+  color: var(--text-secondary);
+}
+
+.ww-vote-status {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-height: 20px;
+}
+
+.ww-section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 24px 0;
+}
+
+/* ---------- ワードウルフ: 結果発表 ---------- */
+.ww-result-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-strong);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  animation: resultReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes resultReveal {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ww-result-headline {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.ww-result-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.ww-result-wolf-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--danger);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.ww-result-topics {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ww-result-topic-item {
+  flex: 1;
+  min-width: 130px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ww-result-role-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  border-radius: 99px;
+}
+
+.ww-result-role-badge.citizen {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1.5px solid #93c5fd;
+}
+
+.ww-result-role-badge.wolf {
+  background: var(--danger-light);
+  color: var(--danger);
+  border: 1.5px solid #fca5a5;
+}
+
+.ww-result-topic-word {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 480px) {
+  .ww-result-wolf-num { font-size: 1.9rem; }
+  .ww-result-topic-word { font-size: 1.3rem; }
+  .ww-vote-btn { min-width: 48px; padding: 10px 6px; font-size: 0.9rem; }
+}
+
 /* ---------- ボタン ---------- */
 .btn {
   display: inline-flex;
