@@ -479,7 +479,153 @@ header {
   margin: 24px 0;
 }
 
-/* ---------- ワードウルフ: 結果発表 ---------- */
+/* ---------- ワードウルフ: ウルフ発表 ---------- */
+.ww-wolf-announcement {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+.ww-announce-sub {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ww-announce-num {
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--danger);
+  line-height: 1.2;
+  margin: 8px 0;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- ワードウルフ: 逆転チャレンジ ---------- */
+.ww-reversal-card {
+  background: var(--danger-light);
+  border: 2px solid #fca5a5;
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  margin-bottom: 0;
+  animation: fadeIn 0.4s ease;
+}
+
+.ww-reversal-headline {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--danger);
+  margin-bottom: 6px;
+}
+
+.ww-reversal-sub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+
+.ww-reversal-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ww-reversal-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 14px;
+  border: 2px solid #fca5a5;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-family: var(--font);
+  background: #fff;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.ww-reversal-input:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* ---------- ワードウルフ: 最終結果 ---------- */
+.ww-final-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-strong);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  animation: resultReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.ww-final-headline {
+  margin-bottom: 24px;
+}
+
+.ww-final-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.ww-final-wolf-win   { color: var(--danger); }
+.ww-final-citizen-win { color: var(--accent); }
+.ww-final-reveal     { color: var(--text-primary); font-size: 1.2rem; }
+
+.ww-final-outcome-sub {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ww-final-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  margin-top: 4px;
+}
+
+.ww-final-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.ww-final-detail-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.ww-final-detail-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .ww-announce-num    { font-size: 2.2rem; }
+  .ww-final-title     { font-size: 1.3rem; }
+  .ww-final-detail-value { font-size: 1rem; }
+  .ww-reversal-input  { min-width: 140px; }
+}
+
+/* ---------- ワードウルフ: 結果発表（旧スタイル、下記に残す） ---------- */
 .ww-result-card {
   background: var(--card-bg);
   border-radius: var(--radius);

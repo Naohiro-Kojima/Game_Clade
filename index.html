@@ -132,47 +132,33 @@
       <!-- ─── フェーズ1: 役割確認 ─── -->
       <div id="ww-setup">
 
-        <!-- 入力フォーム -->
         <div class="wordwolf-form">
           <div class="form-group">
             <label for="ww-keyword">合言葉（全員共通）</label>
-            <input type="text"
-                   id="ww-keyword"
+            <input type="text" id="ww-keyword"
                    placeholder="例: こんにゃく"
-                   autocomplete="off"
-                   spellcheck="false">
+                   autocomplete="off" spellcheck="false">
           </div>
           <div class="form-group">
             <label for="ww-round">回戦数</label>
-            <input type="number"
-                   id="ww-round"
-                   min="1"
-                   max="99"
-                   value="1">
+            <input type="number" id="ww-round" min="1" max="99" value="1">
           </div>
           <div class="form-group">
             <label for="ww-mynum">自分のプレイヤー番号</label>
-            <input type="number"
-                   id="ww-mynum"
-                   min="1"
-                   value="1">
+            <input type="number" id="ww-mynum" min="1" value="1">
           </div>
           <div class="form-group">
             <label for="ww-total">総人数</label>
-            <input type="number"
-                   id="ww-total"
-                   min="2"
-                   max="20"
-                   value="4">
+            <input type="number" id="ww-total" min="2" max="20" value="4">
           </div>
         </div>
 
-        <!-- 役割フリップカード -->
+        <!-- お題フリップカード -->
         <div class="card-scene" aria-live="polite">
           <div class="card" id="wordwolf-card">
             <div class="card-face card-front">
               <span class="card-front-icon">🐺</span>
-              <span>ボタンを押して役割を確認</span>
+              <span>ボタンを押してお題を確認</span>
             </div>
             <div class="card-face card-back">
               <span class="ww-topic-label">あなたのお題</span>
@@ -182,18 +168,14 @@
         </div>
 
         <div class="btn-group">
-          <button class="btn btn-primary" id="btn-check-wordwolf">
-            役割を確認する
-          </button>
-          <button class="btn btn-secondary" id="btn-start-discussion" disabled>
-            議論を開始する →
-          </button>
+          <button class="btn btn-primary" id="btn-check-wordwolf">役割を確認する</button>
+          <button class="btn btn-secondary" id="btn-start-vote" disabled>投票する →</button>
         </div>
 
       </div><!-- /#ww-setup -->
 
-      <!-- ─── フェーズ2: 議論・投票 ─── -->
-      <div id="ww-playing" hidden>
+      <!-- ─── フェーズ2: 投票 ─── -->
+      <div id="ww-vote-section" hidden>
 
         <div class="ww-discussion-header">
           <span class="ww-discussion-dot"></span>
@@ -210,41 +192,71 @@
         <div class="ww-section-divider"></div>
 
         <div class="btn-group">
-          <button class="btn btn-danger" id="btn-reveal-result">
-            正解を表示する
-          </button>
+          <button class="btn btn-primary" id="btn-reveal-wolf">正解を確認する</button>
         </div>
 
-      </div><!-- /#ww-playing -->
+      </div><!-- /#ww-vote-section -->
 
-      <!-- ─── フェーズ3: 結果発表 ─── -->
-      <div id="ww-result" hidden aria-live="polite">
+      <!-- ─── フェーズ3: ウルフ発表 ─── -->
+      <div id="ww-reveal-section" hidden aria-live="polite">
 
-        <div class="ww-result-card" id="ww-result-card">
-          <div class="ww-result-headline">
-            <span class="ww-result-label">ウルフは</span>
-            <span class="ww-result-wolf-num" id="ww-result-wolf-num"></span>
-            <span class="ww-result-label">でした！</span>
-          </div>
-          <div class="ww-result-topics">
-            <div class="ww-result-topic-item">
-              <span class="ww-result-role-badge citizen">市民</span>
-              <span class="ww-result-topic-word" id="ww-result-citizen"></span>
+        <!-- 全員が見る: ウルフ番号発表 -->
+        <div class="ww-wolf-announcement">
+          <p class="ww-announce-sub">今回のウルフは</p>
+          <p class="ww-announce-num" id="ww-announce-wolf-num"></p>
+          <p class="ww-announce-sub">さんでした</p>
+        </div>
+
+        <!-- ウルフのみ: 逆転チャレンジ -->
+        <div id="ww-reversal-section" hidden>
+          <div class="ww-reversal-card">
+            <p class="ww-reversal-headline">あなたはウルフでした！</p>
+            <p class="ww-reversal-sub">市民のお題を当てれば逆転勝利です</p>
+            <div class="ww-reversal-form">
+              <input type="text" id="ww-reversal-input"
+                     class="ww-reversal-input"
+                     placeholder="市民のお題は？"
+                     autocomplete="off">
+              <button class="btn btn-danger" id="btn-submit-reversal">回答する</button>
             </div>
-            <div class="ww-result-topic-item">
-              <span class="ww-result-role-badge wolf">ウルフ</span>
-              <span class="ww-result-topic-word" id="ww-result-wolf-topic"></span>
+          </div>
+        </div>
+
+        <!-- 市民: 最終結果ボタン -->
+        <div id="ww-nonwolf-section" hidden>
+          <div class="btn-group" style="margin-top:20px">
+            <button class="btn btn-secondary" id="btn-show-final">最終結果を見る</button>
+          </div>
+        </div>
+
+      </div><!-- /#ww-reveal-section -->
+
+      <!-- ─── フェーズ4: 最終結果 ─── -->
+      <div id="ww-final-section" hidden aria-live="polite">
+
+        <div class="ww-final-card">
+          <div class="ww-final-headline" id="ww-final-headline"></div>
+          <div class="ww-final-details">
+            <div class="ww-final-detail-row">
+              <span class="ww-final-detail-label">ウルフ</span>
+              <span class="ww-final-detail-value" id="ww-final-wolf-num"></span>
+            </div>
+            <div class="ww-final-detail-row">
+              <span class="ww-final-detail-label">市民のお題</span>
+              <span class="ww-final-detail-value" id="ww-final-citizen"></span>
+            </div>
+            <div class="ww-final-detail-row">
+              <span class="ww-final-detail-label">ウルフのお題</span>
+              <span class="ww-final-detail-value" id="ww-final-wolf-topic"></span>
             </div>
           </div>
         </div>
 
-        <div class="btn-group" style="margin-top:20px;">
-          <button class="btn btn-ghost" id="btn-ww-reset">
-            もう一回プレイ
-          </button>
+        <div class="btn-group" style="margin-top:20px">
+          <button class="btn btn-ghost" id="btn-ww-reset">もう一回プレイ</button>
         </div>
 
-      </div><!-- /#ww-result -->
+      </div><!-- /#ww-final-section -->
 
       <p class="status-message" id="wordwolf-status" role="status"></p>
     </section>

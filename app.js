@@ -302,40 +302,38 @@ function resetTabState(tab) {
   }
 
   if (tab === 'wordwolf') {
-    state.wordwolf.flipped  = false;
-    state.wordwolf.result   = null;
-    state.wordwolf.myVote   = null;
-    state.wordwolf.phase    = 'setup';
-    state.wordwolf.myNum    = 0;
-    state.wordwolf.total    = 0;
+    state.wordwolf.flipped = false;
+    state.wordwolf.result  = null;
+    state.wordwolf.myVote  = null;
+    state.wordwolf.phase   = 'setup';
+    state.wordwolf.myNum   = 0;
+    state.wordwolf.total   = 0;
 
     resetCard('wordwolf-card');
 
     // フェーズセクションをリセット
-    const setupEl   = document.getElementById('ww-setup');
-    const playingEl = document.getElementById('ww-playing');
-    const resultEl  = document.getElementById('ww-result');
-    if (setupEl)   setupEl.hidden   = false;
-    if (playingEl) playingEl.hidden = true;
-    if (resultEl)  resultEl.hidden  = true;
+    const ids = ['ww-setup','ww-vote-section','ww-reveal-section',
+                 'ww-reversal-section','ww-nonwolf-section','ww-final-section'];
+    ids.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = (i !== 0); // ww-setup だけ表示
+    });
 
-    // 「議論を開始する」ボタンを無効化（役割未確認状態へ戻す）
-    const btnStart = document.getElementById('btn-start-discussion');
-    if (btnStart) btnStart.disabled = true;
-
-    // 「役割を確認する」ボタンを有効化
+    // ボタン状態リセット
     const btnCheck = document.getElementById('btn-check-wordwolf');
+    const btnVote  = document.getElementById('btn-start-vote');
     if (btnCheck) btnCheck.disabled = false;
+    if (btnVote)  btnVote.disabled  = true;
 
-    // 投票エリアをクリア
+    // 入力・表示をクリア
+    const topicEl     = document.getElementById('ww-topic');
     const voteButtons = document.getElementById('ww-vote-buttons');
-    if (voteButtons) voteButtons.innerHTML = '';
-    const voteStatus = document.getElementById('ww-vote-status');
-    if (voteStatus) voteStatus.textContent = '';
-
-    // カードのお題をクリア
-    const topicEl = document.getElementById('ww-topic');
-    if (topicEl) topicEl.textContent = '';
+    const voteStatus  = document.getElementById('ww-vote-status');
+    const reversalInput = document.getElementById('ww-reversal-input');
+    if (topicEl)      topicEl.textContent      = '';
+    if (voteButtons)  voteButtons.innerHTML    = '';
+    if (voteStatus)   voteStatus.textContent   = '';
+    if (reversalInput) reversalInput.value     = '';
 
     setStatus('wordwolf-status', '');
   }
@@ -481,9 +479,7 @@ function initTurtleGame() {
 // ゲームC: ワードウルフ（シード付き乱数で同期）
 // ============================================================
 
-/**
- * 投票ボタンを動的生成する
- */
+/** 投票ボタンを動的生成する */
 function renderVoteButtons(total, myNum) {
   const container = document.getElementById('ww-vote-buttons');
   if (!container) return;
@@ -493,53 +489,86 @@ function renderVoteButtons(total, myNum) {
     const btn = document.createElement('button');
     btn.className = 'ww-vote-btn';
     btn.textContent = `${i}番`;
-    btn.setAttribute('aria-label', `${i}番に投票`);
 
     if (i === myNum) {
       btn.disabled = true;
       btn.classList.add('is-self');
       btn.setAttribute('aria-label', `${i}番（自分）`);
     } else {
+      btn.setAttribute('aria-label', `${i}番に投票`);
       btn.addEventListener('click', () => {
-        if (state.wordwolf.myVote !== null) return; // 投票済みなら無視
-
+        if (state.wordwolf.myVote !== null) return;
         state.wordwolf.myVote = i;
-
-        // 全ボタンを無効化し、選んだボタンをハイライト
-        container.querySelectorAll('.ww-vote-btn').forEach(b => {
-          b.disabled = true;
-        });
+        container.querySelectorAll('.ww-vote-btn').forEach(b => { b.disabled = true; });
         btn.classList.add('is-voted');
-        btn.disabled = false; // 視覚的に見えるよう再度有効化（スタイル適用のため）
-
+        btn.disabled = false;
         const voteStatus = document.getElementById('ww-vote-status');
-        if (voteStatus) voteStatus.textContent = `${i}番に投票しました`;
+        if (voteStatus) {
+          voteStatus.textContent =
+            `${i}番に投票しました。準備ができたら「正解を確認する」を押してください。`;
+        }
       });
     }
-
     container.appendChild(btn);
   }
 }
 
+/** 最終結果を表示する（'wolf-win' | 'citizen-win' | 'reveal'） */
+function showWolfFinalResult(type) {
+  const { wolfPlayer, citizenTopic, wolfTopic } = state.wordwolf.result;
+
+  // ヘッドライン組み立て
+  const headlineEl = document.getElementById('ww-final-headline');
+  if (headlineEl) {
+    if (type === 'wolf-win') {
+      headlineEl.innerHTML =
+        `<p class="ww-final-title ww-final-wolf-win">ウルフの逆転勝利！</p>` +
+        `<p class="ww-final-outcome-sub">お題を見破られました</p>`;
+    } else if (type === 'citizen-win') {
+      headlineEl.innerHTML =
+        `<p class="ww-final-title ww-final-citizen-win">市民の勝利！</p>` +
+        `<p class="ww-final-outcome-sub">逃げ切り成功！</p>`;
+    } else {
+      headlineEl.innerHTML =
+        `<p class="ww-final-title ww-final-reveal">実は ${wolfPlayer}番 がウルフでした</p>`;
+    }
+  }
+
+  // 詳細セット
+  const el = (id) => document.getElementById(id);
+  if (el('ww-final-wolf-num'))  el('ww-final-wolf-num').textContent  = `${wolfPlayer}番`;
+  if (el('ww-final-citizen'))   el('ww-final-citizen').textContent   = citizenTopic;
+  if (el('ww-final-wolf-topic')) el('ww-final-wolf-topic').textContent = wolfTopic;
+
+  // reveal セクションを隠して final を表示
+  const revealEl = document.getElementById('ww-reveal-section');
+  const finalEl  = document.getElementById('ww-final-section');
+  if (revealEl) revealEl.hidden = true;
+  if (finalEl)  finalEl.hidden  = false;
+
+  state.wordwolf.phase = 'result';
+}
+
 function initWordWolfGame() {
-  const btnCheck          = document.getElementById('btn-check-wordwolf');
-  const btnStartDiscussion = document.getElementById('btn-start-discussion');
-  const btnRevealResult   = document.getElementById('btn-reveal-result');
-  const btnReset          = document.getElementById('btn-ww-reset');
+  const btnCheck    = document.getElementById('btn-check-wordwolf');
+  const btnVote     = document.getElementById('btn-start-vote');
+  const btnReveal   = document.getElementById('btn-reveal-wolf');
+  const btnReversal = document.getElementById('btn-submit-reversal');
+  const btnFinal    = document.getElementById('btn-show-final');
+  const btnReset    = document.getElementById('btn-ww-reset');
   if (!btnCheck) return;
 
-  // ── 役割を確認する ──
+  // ── 役割を確認する ──────────────────────────────────────────
   btnCheck.addEventListener('click', () => {
     const topics = state.data?.wordwolf;
     if (!topics || topics.length === 0) {
-      setStatus('wordwolf-status', 'お題データがありません', 'error');
-      return;
+      setStatus('wordwolf-status', 'お題データがありません', 'error'); return;
     }
 
     const keyword = document.getElementById('ww-keyword').value.trim();
-    const round   = parseInt(document.getElementById('ww-round').value,  10);
-    const myNum   = parseInt(document.getElementById('ww-mynum').value,  10);
-    const total   = parseInt(document.getElementById('ww-total').value,  10);
+    const round   = parseInt(document.getElementById('ww-round').value, 10);
+    const myNum   = parseInt(document.getElementById('ww-mynum').value, 10);
+    const total   = parseInt(document.getElementById('ww-total').value, 10);
 
     if (!keyword) {
       setStatus('wordwolf-status', '合言葉を入力してください', 'error'); return;
@@ -554,12 +583,12 @@ function initWordWolfGame() {
       setStatus('wordwolf-status', `プレイヤー番号は 1〜${total} の整数を入力してください`, 'error'); return;
     }
 
-    // ─── シード付き乱数でお題とウルフを決定 ───────────────────────
+    // ─── シード付き乱数 ───────────────────────────────────────
     const seed       = djb2Hash(keyword + String(round));
     const random     = mulberry32(seed);
     const topicIndex = Math.floor(random() * topics.length);
     const wolfPlayer = Math.floor(random() * total) + 1;
-    // ────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────
 
     const picked  = topics[topicIndex];
     const isWolf  = (myNum === wolfPlayer);
@@ -572,19 +601,17 @@ function initWordWolfGame() {
       citizenTopic: picked.citizen,
       wolfTopic:    picked.wolf,
     };
-    state.wordwolf.myNum  = myNum;
-    state.wordwolf.total  = total;
+    state.wordwolf.myNum = myNum;
+    state.wordwolf.total = total;
 
-    // モーダルで「周りを確認してから」促す
+    // モーダル確認 → カードフリップ
     modal.show(
       '周りのプレイヤーから画面を隠してから\n「確認・表示する」を押してください。',
       () => {
-        // カードにお題をセットしてフリップ（役職バッジは表示しない）
         const doFlip = () => {
           const topicEl = document.getElementById('ww-topic');
           if (topicEl) topicEl.textContent = myTopic;
         };
-
         if (state.wordwolf.flipped) {
           reflipCard('wordwolf-card', doFlip);
         } else {
@@ -592,62 +619,71 @@ function initWordWolfGame() {
           flipCard('wordwolf-card');
         }
         state.wordwolf.flipped = true;
-
-        // 「議論を開始する」を有効化、「役割を確認する」を無効化
-        if (btnStartDiscussion) btnStartDiscussion.disabled = false;
+        if (btnVote) btnVote.disabled = false;
         btnCheck.disabled = true;
-        setStatus('wordwolf-status', 'お題を確認しました。全員が確認したら「議論を開始する」を押してください。');
+        setStatus('wordwolf-status', 'お題を確認しました。全員が確認したら「投票する」を押してください。');
       }
     );
   });
 
-  // ── 議論を始める ──
-  if (btnStartDiscussion) {
-    btnStartDiscussion.addEventListener('click', () => {
-      // setup セクションを隠し playing セクションを表示
-      const setupEl   = document.getElementById('ww-setup');
-      const playingEl = document.getElementById('ww-playing');
-      if (setupEl)   setupEl.hidden   = true;
-      if (playingEl) playingEl.hidden = false;
-
-      state.wordwolf.phase = 'playing';
-
-      // 投票ボタンを生成
+  // ── 投票する ────────────────────────────────────────────────
+  if (btnVote) {
+    btnVote.addEventListener('click', () => {
+      if (!state.wordwolf.result) {
+        setStatus('wordwolf-status', '先に「役割を確認する」を押してください', 'error'); return;
+      }
+      document.getElementById('ww-setup').hidden       = true;
+      document.getElementById('ww-vote-section').hidden = false;
+      state.wordwolf.phase = 'vote';
       renderVoteButtons(state.wordwolf.total, state.wordwolf.myNum);
       setStatus('wordwolf-status', '');
     });
   }
 
-  // ── 正解を表示する ──
-  if (btnRevealResult) {
-    btnRevealResult.addEventListener('click', () => {
-      modal.show(
-        '全員の議論と投票が終わりましたか？\n「確認・表示する」を押すと正解が表示されます。',
-        () => {
-          const { wolfPlayer, citizenTopic, wolfTopic } = state.wordwolf.result;
+  // ── 正解を確認する ──────────────────────────────────────────
+  if (btnReveal) {
+    btnReveal.addEventListener('click', () => {
+      const { wolfPlayer, isWolf } = state.wordwolf.result;
 
-          // 結果エリアにデータをセット
-          const wolfNumEl    = document.getElementById('ww-result-wolf-num');
-          const citizenEl    = document.getElementById('ww-result-citizen');
-          const wolfTopicEl  = document.getElementById('ww-result-wolf-topic');
-          if (wolfNumEl)   wolfNumEl.textContent   = `${wolfPlayer}番`;
-          if (citizenEl)   citizenEl.textContent   = citizenTopic;
-          if (wolfTopicEl) wolfTopicEl.textContent = wolfTopic;
+      document.getElementById('ww-vote-section').hidden   = true;
+      document.getElementById('ww-reveal-section').hidden = false;
 
-          // playing → result に切り替え
-          const playingEl = document.getElementById('ww-playing');
-          const resultEl  = document.getElementById('ww-result');
-          if (playingEl) playingEl.hidden = true;
-          if (resultEl)  resultEl.hidden  = false;
+      // ウルフ番号を全員に表示
+      const numEl = document.getElementById('ww-announce-wolf-num');
+      if (numEl) numEl.textContent = `${wolfPlayer}番`;
 
-          state.wordwolf.phase = 'result';
-          setStatus('wordwolf-status', '');
-        }
-      );
+      // ウルフ本人 → 逆転チャレンジ  /  市民 → 最終結果ボタン
+      if (isWolf) {
+        document.getElementById('ww-reversal-section').hidden = false;
+      } else {
+        document.getElementById('ww-nonwolf-section').hidden = false;
+      }
+      state.wordwolf.phase = 'reveal';
+      setStatus('wordwolf-status', '');
     });
   }
 
-  // ── もう一回プレイ（リセット） ──
+  // ── 回答する（ウルフ逆転チャレンジ）────────────────────────
+  if (btnReversal) {
+    btnReversal.addEventListener('click', () => {
+      const input = document.getElementById('ww-reversal-input');
+      const answer = input ? input.value.trim() : '';
+      if (!answer) {
+        setStatus('wordwolf-status', '回答を入力してください', 'error'); return;
+      }
+      const correct = (answer === state.wordwolf.result.citizenTopic.trim());
+      showWolfFinalResult(correct ? 'wolf-win' : 'citizen-win');
+    });
+  }
+
+  // ── 最終結果を見る（市民）──────────────────────────────────
+  if (btnFinal) {
+    btnFinal.addEventListener('click', () => {
+      showWolfFinalResult('reveal');
+    });
+  }
+
+  // ── もう一回プレイ ─────────────────────────────────────────
   if (btnReset) {
     btnReset.addEventListener('click', () => {
       resetTabState('wordwolf');
