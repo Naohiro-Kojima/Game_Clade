@@ -60,7 +60,7 @@ const state = {
   turtle: {
     current: null,    // { question, answer }
     questionRevealed: false,
-    answerFlipped: false,
+    answerRevealed: false,  // フリップ廃止→フェードイン展開
   },
 
   wordwolf: {
@@ -275,13 +275,18 @@ function resetTabState(tab) {
   if (tab === 'turtle') {
     state.turtle.current = null;
     state.turtle.questionRevealed = false;
-    state.turtle.answerFlipped = false;
-    resetCard('turtle-card');
+    state.turtle.answerRevealed = false;
 
     const qEl = document.getElementById('turtle-question-display');
     if (qEl) {
       qEl.textContent = '「問題を引く」を押すと、ここに問題文が表示されます。';
       qEl.classList.add('is-empty');
+    }
+
+    const wrapperEl = document.getElementById('turtle-answer-wrapper');
+    if (wrapperEl) {
+      wrapperEl.classList.remove('is-revealed');
+      wrapperEl.setAttribute('aria-hidden', 'true');
     }
     const aEl = document.getElementById('turtle-answer');
     if (aEl) aEl.textContent = '';
@@ -382,7 +387,7 @@ function initEnglishGame() {
 // ============================================================
 
 function initTurtleGame() {
-  const btnDraw = document.getElementById('btn-draw-turtle');
+  const btnDraw   = document.getElementById('btn-draw-turtle');
   const btnReveal = document.getElementById('btn-reveal-turtle');
   if (!btnDraw || !btnReveal) return;
 
@@ -394,24 +399,28 @@ function initTurtleGame() {
     }
 
     const picked = questions[Math.floor(Math.random() * questions.length)];
-    state.turtle.current = picked;
+    state.turtle.current          = picked;
     state.turtle.questionRevealed = true;
 
-    // 問題文を常時表示エリアへ
+    // 問題文エリアを更新
     const qEl = document.getElementById('turtle-question-display');
     if (qEl) {
       qEl.textContent = picked.question;
       qEl.classList.remove('is-empty');
     }
 
-    // 真相をカード裏面にセット
+    // 真相テキストをセット（まだ非表示）
     const aEl = document.getElementById('turtle-answer');
     if (aEl) aEl.textContent = picked.answer;
 
-    // 真相カードが開いていればリセット
-    if (state.turtle.answerFlipped) {
-      resetCard('turtle-card');
-      state.turtle.answerFlipped = false;
+    // 真相エリアが開いていれば閉じる
+    if (state.turtle.answerRevealed) {
+      const wrapperEl = document.getElementById('turtle-answer-wrapper');
+      if (wrapperEl) {
+        wrapperEl.classList.remove('is-revealed');
+        wrapperEl.setAttribute('aria-hidden', 'true');
+      }
+      state.turtle.answerRevealed = false;
     }
 
     btnReveal.disabled = false;
@@ -419,13 +428,18 @@ function initTurtleGame() {
   });
 
   btnReveal.addEventListener('click', () => {
-    if (!state.turtle.current || state.turtle.answerFlipped) return;
+    if (!state.turtle.current || state.turtle.answerRevealed) return;
 
     modal.show(
       '出題者として真相を確認します。\n他のプレイヤーから画面を隠してから「確認・表示する」を押してください。',
       () => {
-        flipCard('turtle-card');
-        state.turtle.answerFlipped = true;
+        // フェードイン＋スライド展開
+        const wrapperEl = document.getElementById('turtle-answer-wrapper');
+        if (wrapperEl) {
+          wrapperEl.classList.add('is-revealed');
+          wrapperEl.setAttribute('aria-hidden', 'false');
+        }
+        state.turtle.answerRevealed = true;
         btnReveal.disabled = true;
         setStatus('turtle-status', '真相を表示しています。ゲーム終了後にタブを切り替えるとリセットされます。');
       }

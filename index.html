@@ -93,14 +93,13 @@
         「問題を引く」を押すと、ここに問題文が表示されます。
       </div>
 
-      <!-- 真相フリップカード -->
-      <div class="card-scene" aria-live="polite">
-        <div class="card" id="turtle-card">
-          <div class="card-face card-front">
-            <span class="card-front-icon">🐢</span>
-            <span>出題者として答えを確認</span>
-          </div>
-          <div class="card-face card-back">
+      <!-- 真相フェードイン展開エリア（初期非表示） -->
+      <div class="turtle-answer-wrapper"
+           id="turtle-answer-wrapper"
+           aria-live="polite"
+           aria-hidden="true">
+        <div class="turtle-answer-inner">
+          <div class="turtle-answer-inner-content">
             <span class="answer-label">真相</span>
             <p class="answer-value" id="turtle-answer"></p>
           </div>
