@@ -208,8 +208,8 @@ header {
 /* 個別NGワードバッジ */
 .ng-badge {
   font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--danger);
+  font-weight: 800;
+  color: #e74c3c;
   background: var(--danger-light);
   border: 1.5px solid #fca5a5;
   padding: 4px 12px;
